@@ -20,3 +20,6 @@ test-network/organizations/fabric-ca/orgClient/IssuerRevocationPublicKey
 test-network/organizations/fabric-ca/orgClient/IssuerPublicKey
 test-network/organizations/fabric-ca/orgClient/fabric-ca-server.db
 test-network/organizations/fabric-ca/orgClient/ca-cert.pem
+
+bin/*
+config/*
