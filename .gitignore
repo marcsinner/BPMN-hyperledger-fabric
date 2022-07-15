@@ -23,3 +23,15 @@ test-network/organizations/fabric-ca/orgClient/ca-cert.pem
 
 bin/*
 config/*
+bin/configtxgen
+bin/configtxlator
+bin/cryptogen
+bin/discover
+bin/fabric-ca-client
+bin/fabric-ca-server
+bin/ledgerutil
+bin/orderer
+bin/osnadmin
+bin/peer
+test-network/organizations/fabric-ca/orgClient/msp/keystore/*
+test-network/organizations/fabric-ca/orgPlatform/msp/keystore/*
