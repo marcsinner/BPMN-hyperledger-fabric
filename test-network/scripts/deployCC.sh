@@ -125,43 +125,43 @@ packageChaincode() {
 packageChaincode
 
 ## Install chaincode on peer0.org1 and peer0.org2
-infoln "Installing chaincode on peer0.org1..."
-installChaincode 1
-infoln "Install chaincode on peer0.org2..."
-installChaincode 2
+infoln "Installing chaincode on peer0.orgClient..."
+installChaincode "Client"
+infoln "Install chaincode on peer0.orgPlatform..."
+installChaincode "Platform"
 
 ## query whether the chaincode is installed
-queryInstalled 1
+queryInstalled "Client"
 
 ## approve the definition for org1
-approveForMyOrg 1
+approveForMyOrg "Client"
 
 ## check whether the chaincode definition is ready to be committed
 ## expect org1 to have approved and org2 not to
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
+checkCommitReadiness "Client" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": false"
+checkCommitReadiness "Platform" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": false"
 
 ## now approve also for org2
-approveForMyOrg 2
+approveForMyOrg "Platform"
 
 ## check whether the chaincode definition is ready to be committed
 ## expect them both to have approved
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
+checkCommitReadiness "Client" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": true"
+checkCommitReadiness "Platform" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": true"
 
 ## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition 1 2
+commitChaincodeDefinition "Client" "Platform"
 
 ## query on both orgs to see that the definition committed successfully
-queryCommitted 1
-queryCommitted 2
+queryCommitted "Client"
+queryCommitted "Platform"
 
 ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
 ## method defined
 if [ "$CC_INIT_FCN" = "NA" ]; then
   infoln "Chaincode initialization is not required"
 else
-  chaincodeInvokeInit 1 2
+  chaincodeInvokeInit "Client" "Platform"
 fi
 
 exit 0
