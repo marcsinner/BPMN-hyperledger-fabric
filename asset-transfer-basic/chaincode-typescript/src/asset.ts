@@ -13,14 +13,17 @@ export class Asset {
     public ID: string;
 
     @Property()
-    public Color: string;
+    public Object: string;
 
     @Property()
-    public Size: number;
+    public Pincodes: number[];
 
     @Property()
     public Owner: string;
 
     @Property()
-    public AppraisedValue: number;
+    public ItemSold: boolean;
+
+    @Property()
+    public AddressToShipTo: string;
 }

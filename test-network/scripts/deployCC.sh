@@ -125,43 +125,43 @@ packageChaincode() {
 packageChaincode
 
 ## Install chaincode on peer0.org1 and peer0.org2
-infoln "Installing chaincode on peer0.orgClient..."
-installChaincode "Client"
-infoln "Install chaincode on peer0.orgPlatform..."
-installChaincode "Platform"
+infoln "Installing chaincode on peer0.org1..."
+installChaincode 1
+infoln "Install chaincode on peer0.org2..."
+installChaincode 2
 
 ## query whether the chaincode is installed
-queryInstalled "Client"
+queryInstalled 1
 
 ## approve the definition for org1
-approveForMyOrg "Client"
+approveForMyOrg 1
 
 ## check whether the chaincode definition is ready to be committed
 ## expect org1 to have approved and org2 not to
-checkCommitReadiness "Client" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": false"
-checkCommitReadiness "Platform" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": false"
+checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
+checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
 
 ## now approve also for org2
-approveForMyOrg "Platform"
+approveForMyOrg 2
 
 ## check whether the chaincode definition is ready to be committed
 ## expect them both to have approved
-checkCommitReadiness "Client" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": true"
-checkCommitReadiness "Platform" "\"OrgClientMSP\": true" "\"OrgPlatformMSP\": true"
+checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
+checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
 
 ## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition "Client" "Platform"
+commitChaincodeDefinition 1 2
 
 ## query on both orgs to see that the definition committed successfully
-queryCommitted "Client"
-queryCommitted "Platform"
+queryCommitted 1
+queryCommitted 2
 
 ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
 ## method defined
 if [ "$CC_INIT_FCN" = "NA" ]; then
   infoln "Chaincode initialization is not required"
 else
-  chaincodeInvokeInit "Client" "Platform"
+  chaincodeInvokeInit 1 2
 fi
 
 exit 0

@@ -34,7 +34,7 @@ createChannelGenesisBlock() {
 }
 
 createChannel() {
-	setGlobals "Client"
+	setGlobals 1
 	# Poll in case the raft leader is not set yet
 	local rc=1
 	local COUNTER=1
@@ -92,15 +92,15 @@ createChannel
 successln "Channel '$CHANNEL_NAME' created"
 
 ## Join all the peers to the channel
-infoln "Joining orgClient peer to the channel..."
-joinChannel "Client"
-infoln "Joining orgPlatform peer to the channel..."
-joinChannel "Platform"
+infoln "Joining org1 peer to the channel..."
+joinChannel 1
+infoln "Joining org2 peer to the channel..."
+joinChannel 2
 
 ## Set the anchor peers for each org in the channel
-infoln "Setting anchor peer for orgClient..."
-setAnchorPeer "Client"
-infoln "Setting anchor peer for orgPlatform..."
-setAnchorPeer "Platform"
+infoln "Setting anchor peer for org1..."
+setAnchorPeer 1
+infoln "Setting anchor peer for org2..."
+setAnchorPeer 2
 
 successln "Channel '$CHANNEL_NAME' joined"
