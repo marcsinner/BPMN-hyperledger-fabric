@@ -25,5 +25,5 @@ export class Asset {
     public ItemSold: boolean;
 
     @Property()
-    public AddressToShipTo: string;
+    public ShippingAddress: string;
 }

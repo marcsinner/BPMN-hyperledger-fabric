@@ -99,7 +99,6 @@ async function main() {
     }
 }
 
-
 main().catch(error => {
     console.error('******** FAILED to run the application:', error);
     process.exitCode = 1;
@@ -131,7 +130,7 @@ async function newSigner() {
  * initial deployment. A new version of the chaincode deployed later would likely not need to run an "init" function.
  */
 async function initLedger(contract) {
-    console.log(C_BLUE, '\n--> Submit Transaction: InitLedger, function creates the initial set of products on the ledger');
+    console.log(C_BLUE, '\n--> Submit Transaction: Initialise the ledger with 6 products, 2 of which are already sold');
     await contract.submitTransaction('InitLedger');
     console.log('*** Transaction committed successfully');
 }
@@ -140,7 +139,7 @@ async function initLedger(contract) {
  * Evaluate a transaction to query ledger state.
  */
 async function getAllAssets(contract) {
-    console.log(C_BLUE, '\n--> Evaluate Transaction: GetAllAssets, function returns all the current products on the ledger');
+    console.log(C_BLUE, '\n--> Evaluate Transaction: Retrieve all the products on the ledger to check that it was correctly initialised');
     const resultBytes = await contract.evaluateTransaction('GetAllAssets');
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
@@ -151,7 +150,7 @@ async function getAllAssets(contract) {
  * Evaluate a transaction to query ledger state.
  */
 async function getAllAssetsByObject(contract) {
-    console.log(C_BLUE, '\n--> Evaluate Transaction: GetAllAssetsByObject, function returns all the current products on the ledger that correspond to the searched object');
+    console.log(C_BLUE, '\n--> Evaluate Transaction: Retrieve all available skateboards on the ledger');
     const resultBytes = await contract.evaluateTransaction('GetAllAssetsByObject', 'Skateboard');
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
@@ -162,11 +161,23 @@ async function getAllAssetsByObject(contract) {
  * Evaluate a transaction to query ledger state.
  */
 async function getAssetAvailabilityByPincode(contract) {
-    console.log(C_BLUE, '\n--> Evaluate Transaction: getAssetAvailabilityByPincode, function returns whether the product is available in the given pincode area');
-    if (await contract.evaluateTransaction('GetAssetAvailabilityByPincode', 'asset3', '80798')) {
-        console.log('*** Result:', 'This asset is available in the 80798 area');
+    console.log(C_BLUE, '\n--> Evaluate Transaction: Check if the first skateboard (asset1) is available in the 80798 area');
+    let resultBytes = await contract.evaluateTransaction('GetAssetAvailabilityByPincode', 'asset1', '80798');
+    let resultJson = utf8Decoder.decode(resultBytes);
+    let result = JSON.parse(resultJson);
+    if (result) {
+        console.log(C_GREEN, '*** Result: This asset is available in the 80798 area');
     } else {
-        console.log('*** Result:', 'This asset is not available in the 80798 area');
+        console.log(C_RED, '*** Result: This asset is not available in the 80798 area');
+    }
+    console.log(C_BLUE, '\n--> Evaluate Transaction: Check if the second skateboard (asset3) is available in the 80798 area');
+    resultBytes = await contract.evaluateTransaction('GetAssetAvailabilityByPincode', 'asset3', '80798');
+    resultJson = utf8Decoder.decode(resultBytes);
+    result = JSON.parse(resultJson);
+    if (result) {
+        console.log(C_GREEN, '*** Result: This asset is available in the 80798 area');
+    } else {
+        console.log(C_RED, '*** Result: This asset is not available in the 80798 area');
     }
 }
 
@@ -175,7 +186,7 @@ async function getAssetAvailabilityByPincode(contract) {
  * while waiting for the commit notification.
  */
 async function transferAssetAsync(contract) {
-    console.log(C_BLUE, '\n--> Async Submit Transaction: TransferAsset, updates existing product owner as well as the shipping address and the item status');
+    console.log(C_BLUE, '\n--> Async Submit Transaction: Transfer the skateboard (asset3) from Jin Soo to Saptha and fill the shipping address');
     const commit = await contract.submitAsync('TransferAsset', {
         arguments: ['asset3', 'Saptha', 'Augustenstraße 116, 80798 München'],
     });
@@ -190,7 +201,7 @@ async function transferAssetAsync(contract) {
 }
 
 async function readAssetByID(contract) {
-    console.log(C_BLUE, '\n--> Evaluate Transaction: ReadAsset, function returns product attributes');
+    console.log(C_BLUE, '\n--> Evaluate Transaction: Retrieve asset3 to check that the ownership and shipping address have changed accordingly');
     const resultBytes = await contract.evaluateTransaction('ReadAsset', 'asset3');
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);

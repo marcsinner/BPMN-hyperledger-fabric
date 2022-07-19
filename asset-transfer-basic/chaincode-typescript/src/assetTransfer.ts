@@ -17,10 +17,10 @@ export class AssetTransferContract extends Contract {
             {
                 ID: 'asset1',
                 Object: 'Skateboard',
-                Pincodes: [80796, 80797, 80798, 80799, 80801, 80803, 80804],
+                Pincodes: [80796, 80797, 80799, 80801, 80803, 80804],
                 Owner: 'Tomoko',
                 ItemSold: false,
-                AddressToShipTo: '',
+                ShippingAddress: '',
             },
             {
                 ID: 'asset2',
@@ -28,7 +28,7 @@ export class AssetTransferContract extends Contract {
                 Pincodes: [80801, 80805, 80807, 80809],
                 Owner: 'Brad',
                 ItemSold: true,
-                AddressToShipTo: 'Franz-Joseph-Straße 45, 80801 München',
+                ShippingAddress: 'Franz-Joseph-Straße 45, 80801 München',
             },
             {
                 ID: 'asset3',
@@ -36,7 +36,7 @@ export class AssetTransferContract extends Contract {
                 Pincodes: [80798, 80799, 80801, 80803, 80807, 80809],
                 Owner: 'Jin Soo',
                 ItemSold: false,
-                AddressToShipTo: '',
+                ShippingAddress: '',
             },
             {
                 ID: 'asset4',
@@ -44,7 +44,7 @@ export class AssetTransferContract extends Contract {
                 Pincodes: [80796, 80797, 80807, 80809],
                 Owner: 'Max',
                 ItemSold: false,
-                AddressToShipTo: '',
+                ShippingAddress: '',
             },
             {
                 ID: 'asset5',
@@ -52,7 +52,7 @@ export class AssetTransferContract extends Contract {
                 Pincodes: [80803, 80807, 80809],
                 Owner: 'Adriana',
                 ItemSold: false,
-                AddressToShipTo: '',
+                ShippingAddress: '',
             },
             {
                 ID: 'asset6',
@@ -60,7 +60,7 @@ export class AssetTransferContract extends Contract {
                 Pincodes: [80796, 80797, 80798, 80799, 80801],
                 Owner: 'Michel',
                 ItemSold: true,
-                AddressToShipTo: 'Franz-Joseph-Straße 45, 80801 München',
+                ShippingAddress: 'Franz-Joseph-Straße 45, 80801 München',
             },
         ];
 
@@ -144,12 +144,12 @@ export class AssetTransferContract extends Contract {
 
     // TransferAsset updates the owner field of asset with given id in the world state, and returns the old owner.
     @Transaction()
-    public async TransferAsset(ctx: Context, id: string, newOwner: string, addressToShipTo: string): Promise<string> {
+    public async TransferAsset(ctx: Context, id: string, newOwner: string, shippingAddress: string): Promise<string> {
         const assetString = await this.ReadAsset(ctx, id);
         const asset = JSON.parse(assetString);
         const oldOwner = asset.Owner;
         asset.Owner = newOwner;
-        asset.AddressToShipTo = addressToShipTo;
+        asset.ShippingAddress = shippingAddress;
         asset.ItemSold = true;
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
